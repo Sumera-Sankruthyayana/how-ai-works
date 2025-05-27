@@ -14,17 +14,21 @@ export default function AppLayout() {
         </div>
       )}
       <div
-        className={`grid grid-cols-7 gap-1 ${isFetching > 0 ? "blur-sm" : ""}`}
+        className={`grid grid-cols-14 lg:grid-cols-6 sm:grid-cols-10 gap-1 ${
+          isFetching > 0 ? "blur-sm" : ""
+        }`}
       >
         <div className="col-span-1">
           <MainNav />
         </div>
-        <div className="col-span-6 flex flex-col items-center justify-between min-h-full p-2">
+        <div className="col-span-13 lg:col-span-5 sm:col-span-9 flex flex-col items-center justify-between min-h-full gap-2">
           <MainHead />
-          <div className="p-2 overflow-y-auto max-h-[calc(100vh-200px)] border-2 border-gray-300 dark:border-gray-700 rounded-lg">
+          <div className="p-0.5 overflow-y-auto max-h-[calc(100vh-200px)] border-1 border-gray-300 dark:border-gray-700 rounded-lg">
             <Outlet />
           </div>
-          <Footer />
+          <div>
+            <Footer />
+          </div>
         </div>
       </div>
     </div>
