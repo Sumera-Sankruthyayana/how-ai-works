@@ -6,20 +6,28 @@ import MatrixDisplay from "../features/ui/MatrixDisplay";
 import { computeQKV } from "../services/apiQKVService";
 import { setQKV } from "./journeySlice";
 import { useState } from "react";
+import { setLoading } from "./journeySlice";
 export default function QueryKeyvalue() {
   const { tokens } = useSelector(getJourneyState);
   const dispatch = useDispatch();
   const [queryKeyValues, setQueryKeyValues] = useState();
-  const mutation = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: computeQKV,
     onSuccess: (data) => {
       setQueryKeyValues(data.result);
       dispatch(setQKV(data.result));
+      dispatch(setLoading(false));
     },
     onError: (error) => {
       console.error("Error:", error.message);
+      dispatch(setLoading(false));
     },
   });
+
+  const handleComputeQKV = () => {
+    dispatch(setLoading(true));
+    mutate({ tokens });
+  };
 
   const {
     data: W_Q,
@@ -115,7 +123,8 @@ export default function QueryKeyvalue() {
           <br />
           <button
             type="button"
-            onClick={() => mutation.mutate({ tokens })}
+            onClick={handleComputeQKV}
+            disabled={isLoading}
             className="mt-4 text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
           >
             Compute QKV

@@ -4,6 +4,9 @@ import { useMutation } from "@tanstack/react-query";
 import { computSoftMaxProbability } from "../services/apiQKVService";
 import { getWeighedSum } from "./journeySlice";
 import { useState } from "react";
+import { setLoading } from "./journeySlice";
+import { useDispatch } from "react-redux";
+
 export default function ContextualOutput() {
   const state = useSelector(getJourneyState);
   const { tokens, QKV, dotProduct, softmax } = state;
@@ -11,20 +14,26 @@ export default function ContextualOutput() {
   const lastToken = tokens[tokens.length - 1];
   const lastWordOutputVector = weightedSum[lastToken];
   const [softmaxProbabilities, setSoftmaxProbabilities] = useState();
-
-  const mutation = useMutation({
+  const dispatch = useDispatch();
+  const { mutate, isLoading } = useMutation({
     mutationFn: computSoftMaxProbability,
     onSuccess: (data) => {
       const sortedResults = Object.entries(data.result)
         .sort(([, a], [, b]) => b - a)
         .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-      console.log(sortedResults);
       setSoftmaxProbabilities(sortedResults);
+      dispatch(setLoading(false));
     },
     onError: (error) => {
       console.log(error);
+      dispatch(setLoading(false));
     },
   });
+
+  const handleComputeSoftmaxProbabilities = () => {
+    dispatch(setLoading(true));
+    mutate({ outputVector: lastWordOutputVector });
+  };
 
   return tokens.length <= 0 ||
     Object.keys(QKV).length <= 0 ||
@@ -38,10 +47,15 @@ export default function ContextualOutput() {
   ) : (
     <div className="flex flex-col justify-center items-center">
       <p className="text-1xl font-medium text-center text-gray-900 dark:text-white">
-        These vectors are the context-aware representations of each word.
+        <span className="text-2xl font-bold underline">Contextual Output</span>
         <br />
-        They combine information from the surrounding words based on the
-        attention weights.
+        The final step is to ise the contextual output vector of the last word
+        to predict the next word in the sentence. <br />
+        The output vector of the last word is enoigh as it already contains the
+        information about the surrounding words. <br />
+        This is done by computing the softmax probabilities of the output vector
+        with all the word embeddings in the vocabulary. <br />
+        <br />
       </p>
       <br />
       <p className="text-1xl font-medium text-center text-gray-900 dark:text-white">
@@ -51,7 +65,8 @@ export default function ContextualOutput() {
       <br />
       <button
         type="button"
-        onClick={() => mutation.mutate({ outputVector: lastWordOutputVector })}
+        onClick={handleComputeSoftmaxProbabilities}
+        disabled={isLoading}
         className="mt-4 mb-4 text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
       >
         Compute SoftMax Probabilities

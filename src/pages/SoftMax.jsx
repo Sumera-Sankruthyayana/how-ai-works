@@ -5,20 +5,29 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setSoftmax } from "./journeySlice";
+import { setLoading } from "./journeySlice";
 export default function Softmax() {
   const { tokens, QKV, dotProduct } = useSelector(getJourneyState);
   const [softmaxResult, setSoftmaxResult] = useState();
   const dispatch = useDispatch();
-  const mutation = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: softmax,
     onSuccess: (data) => {
       setSoftmaxResult(data.attentionWeights);
       dispatch(setSoftmax(data.attentionWeights));
+      dispatch(setLoading(false));
     },
     onError: (error) => {
       console.error(error);
+      dispatch(setLoading(false));
     },
   });
+
+  function handleComputeSoftmax() {
+    dispatch(setLoading(true));
+    mutate({ dotProduct });
+  }
+
   return tokens.length <= 0 ||
     Object.keys(QKV).length <= 0 ||
     Object.keys(dotProduct).length <= 0 ? (
@@ -32,6 +41,8 @@ export default function Softmax() {
     <>
       <div className="flex flex-col gap-2 justify-center items-center">
         <p className="text-1xl font-medium text-center text-gray-900 dark:text-white">
+          <span className="text-2xl font-bold underline">SoftMax</span>
+          <br />
           The softmax function takes a list of numbers (called logits) and turns
           them into a probability distribution — a list of values between 0 and
           1 that all sum to 1.
@@ -48,7 +59,8 @@ export default function Softmax() {
           <br />
           <button
             type="button"
-            onClick={() => mutation.mutate({ dotProduct })}
+            onClick={handleComputeSoftmax}
+            disabled={isLoading}
             className="mt-4 mb-4 text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
           >
             Compute SoftMax

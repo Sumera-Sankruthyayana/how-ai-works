@@ -4,11 +4,17 @@ import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import Spinner from "./Spinner";
 import { useIsFetching } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { getJourneyState } from "../../pages/journeySlice";
 export default function AppLayoutV2() {
-  const isFetching = useIsFetching();
+  const { loading } = useSelector(getJourneyState);
+  let isFetching = useIsFetching() > 0;
+  if (loading) {
+    isFetching = true;
+  }
   return (
     <div className="relative bg-slate-100 dark:bg-slate-900 min-h-screen px-8">
-      {isFetching > 0 && (
+      {isFetching && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-xs z-50">
           <Spinner />
         </div>

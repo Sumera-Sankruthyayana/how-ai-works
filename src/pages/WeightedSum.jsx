@@ -22,6 +22,8 @@ export default function WeightedSum() {
   ) : (
     <div className="flex flex-col justify-center items-center gap-2">
       <p className="text-1xl font-medium text-center text-gray-900 dark:text-white">
+        <span className="text-2xl font-bold underline">Weighted Sum</span>
+        <br />
         These vectors are the context-aware representations of each word.
         <br />
         They combine information from the surrounding words based on the

@@ -5,21 +5,28 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setDotProduct } from "./journeySlice";
-
+import { setLoading } from "./journeySlice";
 export default function DotProduct() {
   const { tokens, QKV } = useSelector(getJourneyState);
   const [dotProductResult, setDotProductResult] = useState();
   const dispatch = useDispatch();
-  const mutation = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: dotProduct,
     onSuccess: (data) => {
       setDotProductResult(data.result);
       dispatch(setDotProduct(data.result));
+      dispatch(setLoading(false));
     },
     onError: (error) => {
       console.error(error);
+      dispatch(setLoading(false));
     },
   });
+
+  const handleComputeDotProduct = () => {
+    dispatch(setLoading(true));
+    mutate({ tokens });
+  };
 
   return tokens.length <= 0 || Object.keys(QKV).length <= 0 ? (
     <div className="flex justify-center items-center">
@@ -47,7 +54,8 @@ export default function DotProduct() {
           <br />
           <button
             type="button"
-            onClick={() => mutation.mutate({ tokens })}
+            onClick={handleComputeDotProduct}
+            disabled={isLoading}
             className="mt-4 mb-4 text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
           >
             Compute Dot Product

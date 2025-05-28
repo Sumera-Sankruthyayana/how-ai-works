@@ -5,6 +5,7 @@ const initialState = {
   QKV: {},
   dotProduct: {},
   softmax: {},
+  loading: false,
 };
 
 export default function journeySlice(state = initialState, action) {
@@ -41,6 +42,12 @@ export default function journeySlice(state = initialState, action) {
       return {
         ...state,
         softmax: action.payload,
+      };
+    }
+    case "SET_LOADING": {
+      return {
+        ...state,
+        loading: action.payload,
       };
     }
     default: {
@@ -124,4 +131,8 @@ export function getWeighedSum(state) {
     });
   });
   return weightedSum;
+}
+
+export function setLoading(loading) {
+  return { type: "SET_LOADING", payload: loading };
 }
