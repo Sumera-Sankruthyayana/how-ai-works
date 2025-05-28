@@ -16,7 +16,7 @@ const inactiveClass = "bg-gray-200 dark:bg-gray-700";
 export default function MainNav() {
   const steps = useSelector(getSteps);
   return (
-    <ol className="flex flex-col gap-18 sm:gap-18 lg:gap-6 relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400">
+    <ol className="flex flex-col gap-14 sm:gap-12 lg:gap-6 relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400">
       {steps.map((step) => (
         <li key={step.id} className="ms-6">
           <span

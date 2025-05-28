@@ -10,11 +10,12 @@ import ContextualOutput from "./pages/ContextualOutput";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Introduction from "./pages/Introduction";
 import Error from "./features/ui/Error";
+import AppLayoutV2 from "./features/ui/AppLayoutV2";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: <AppLayoutV2 />,
     children: [
       {
         path: "/",
