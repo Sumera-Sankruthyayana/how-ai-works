@@ -27,7 +27,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="pt-2 flex justify-center gap-2 justify-self-end">
+      <footer className="pt-2 flex justify-center gap-2 lg:justify-self-end">
         {currentStep.id !== 0 && (
           <button
             type="button"
