@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setDotProduct } from "./journeySlice";
 import { setLoading } from "./journeySlice";
+import DotProductSketch from "../features/ui/DotProductSketch";
 export default function DotProduct() {
   const { tokens, QKV } = useSelector(getJourneyState);
   const [dotProductResult, setDotProductResult] = useState();
@@ -36,31 +37,37 @@ export default function DotProduct() {
     </div>
   ) : (
     <>
-      <div className="flex justify-center items-center">
-        <p className="text-1xl font-medium text-center text-gray-900 dark:text-white">
-          <span className="text-2xl font-bold underline">Dot Product</span>
-          <br />
-          The dot product is a mathematical operation that takes two vectors and
-          returns a single number. It is calculated by multiplying corresponding
-          elements of the vectors and summing the results.
-          <br />
-          <br />
-          The dot product is used to compute the attention score <br />
-          <br />
-          Dot Products of Q ⋅ K for all token combinations. The higher the dot
-          product, the more similar the tokens are.
-          <br />
-          Click on the button below to compute the dot product
-          <br />
-          <button
-            type="button"
-            onClick={handleComputeDotProduct}
-            disabled={isLoading}
-            className="mt-4 mb-4 text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-          >
-            Compute Dot Product
-          </button>
-        </p>
+      <p className="text-2xl font-bold underline text-center text-gray-900 dark:text-white">
+        Dot Product
+      </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div className="flex justify-center items-center pt-4">
+          <DotProductSketch />
+        </div>
+        <div className="flex justify-center items-center">
+          <p className="text-1xl font-medium text-center text-gray-900 dark:text-white">
+            The dot product is a mathematical operation that takes two vectors
+            and returns a single number. It is calculated by multiplying
+            corresponding elements of the vectors and summing the results.
+            <br />
+            <br />
+            The dot product is used to compute the attention score <br />
+            <br />
+            Dot Products of Q ⋅ K for all token combinations. The higher the dot
+            product, the more similar the tokens are.
+            <br />
+            Click on the button below to compute the dot product
+            <br />
+            <button
+              type="button"
+              onClick={handleComputeDotProduct}
+              disabled={isLoading}
+              className="mt-4 mb-4 text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+            >
+              Compute Dot Product
+            </button>
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-col gap-2 justify-center items-center">
